@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LLydra Clock Pro</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg: linear-gradient(135deg, #283e51 0%, #485563 100%);
+      --card-bg: rgba(255,255,255,0.13);
+      --card-bg-hover: rgba(255,255,255,0.21);
+      --accent: #1de9b6;
+      --accent2: #ffb347;
+      --shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+      --font-head: 'Orbitron', 'Montserrat', Arial, sans-serif;
+      --font-base: 'Montserrat', Arial, sans-serif;
+      --logo-size: 60px;
+      --transition: 0.22s cubic-bezier(.4,2,.5,1);
+    }
+    html, body { height: 100%; }
+    body {
+      min-height: 100vh;
+      background: var(--main-bg);
+      margin: 0;
+      color: #f3f8fa;
+      font-family: var(--font-base);
+      background-attachment: fixed;
+      transition: background 0.6s;
+    }
+    header {
+      text-align: center;
+      padding: 2.2em 1em 1.3em;
+      border-bottom: 2.5px solid var(--accent);
+      background: rgba(0,0,0,0.08);
+      box-shadow: 0 2px 12px 0 rgba(24,24,24,0.09);
+      position:relative;
+    }
+    .app-logo {
+      display:inline-block;
+      width: var(--logo-size);
+      height: var(--logo-size);
+      vertical-align:middle;
+      margin-right: 0.7em;
+      transition: transform 0.24s;
+      filter: drop-shadow(0 2px 8px #1de9b699);
+    }
+    h1 {
+      font-family: var(--font-head);
+      font-size: 2.5em;
+      color: var(--accent);
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      margin: 0.25em 0 0.09em;
+      display:inline-block;
+      vertical-align:middle;
+    }
+    .subtitle {
+      font-size: 1.13em;
+      color: #d9f6f3;
+      letter-spacing: 0.8px;
+      margin-bottom: 0.8em;
+      font-weight: 500;
+      margin-top: 0.18em;
+    }
+    .container {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2vw 0;
+      min-height: 40vh;
+    }
+    .top-bar {
+      display: flex;
+      gap: 1.4rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2.1rem;
+      width: 100%;
+    }
+    .login-bar, .search-bar {
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      border-radius: 11px;
+      padding: 1em 1.5em;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .login-bar input, .search-bar input {
+      padding: 0.65em 1em;
+      border: none;
+      border-radius: 7px;
+      font-family: var(--font-base);
+      font-size: 1em;
+      background: #fff;
+      color: #222;
+      min-width: 120px;
+      outline: none;
+      margin-right: 0.2em;
+      transition: box-shadow 0.2s;
+    }
+    .login-bar button {
+      background: var(--accent2);
+      color: #000;
+      font-family: var(--font-base);
+      font-weight: 700;
+      border: none;
+      border-radius: 7px;
+      padding: 0.7em 1.3em;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.2s;
+    }
+    .login-bar button:hover { background: var(--accent); }
+    .clock-grid {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+      gap: 1.25rem;
+      justify-items: stretch;
+      margin-bottom: 1em;
+    }
+    .clock-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 1.75em 1em 1.2em;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform var(--transition), box-shadow var(--transition), background 0.14s;
+      min-height: 130px;
+      position: relative;
+      border: 2px solid transparent;
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+      will-change: transform;
+    }
+    .clock-card:hover {
+      transform: translateY(-6px) scale(1.045);
+      border-color: var(--accent);
+      background: var(--card-bg-hover);
+      z-index: 2;
+      box-shadow: 0 12px 44px 0 rgba(31,38,135,0.13);
+    }
+    .city-title {
+      font-size: 1.16em;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-bottom: 0.39em;
+      letter-spacing:0.5px;
+      font-family:var(--font-head);
+    }
+    .tz-label {
+      font-size: 0.92em;
+      color: #b3f6ee;
+      margin-bottom: 0.22em;
+    }
+    .clock {
+      font-size: 2.16em;
+      font-family: var(--font-head);
+      color: #fff;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin: 0.38em 0 0.23em;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.10);
+    }
+    .ad-section {
+      margin: 2.5em auto 0;
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 1.2em 2em 1.2em 1.2em;
+      max-width: 450px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      font-size: 1.08em;
+    }
+    .ad-section h2 { color: var(--accent2); font-family:var(--font-head);}
+    .ad-section a { color: var(--accent); text-decoration:underline;}
+    .video-container {
+      margin: 2.5em auto 1em;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 1.5em 0.5em 1em;
+      max-width: 1100px;
+      box-shadow: var(--shadow);
+    }
+    .video-container h2 {
+      color: var(--accent);
+      font-size: 1.35em;
+      margin-bottom: 1.1em;
+      font-family: var(--font-head);
+      font-weight: 700;
+    }
+    .video-list {
+      display: flex; gap: 1.1em; overflow-x: auto; padding-bottom: 1.1em;
+      justify-content: center;
+    }
+    .video-list video {
+      border: 3px solid var(--accent2);
+      border-radius: 11px;
+      width: 300px;
+      height: auto;
+      flex: 0 0 auto;
+      background: #111;
+      box-shadow: 0 2px 14px 0 rgba(31,38,135,0.09);
+    }
+    @media (max-width: 900px) {
+      .video-list video { width: 220px; }
+      .clock-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 1vw 0; }
+      .clock-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+      header { padding: 1em 0.5em 0.7em; }
+      .ad-section { padding: 1em 0.7em;}
+    }
+
+    /* Mascot Loader */
+    #loader-bg {
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      background: linear-gradient(140deg, #283e51 0%, #1de9b6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction:column;
+      transition: opacity 0.6s, visibility 0.6s;
+      opacity: 1;
+      visibility: visible;
+    }
+    #loader-bg.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .mascot-loader {
+      width: 110px;
+      height: 110px;
+      margin-bottom: 1.4em;
+      display: block;
+      animation: mascot-bounce 2.1s infinite cubic-bezier(.56,0,.44,1);
+    }
+    @keyframes mascot-bounce {
+      0%, 100% { transform: translateY(-4px) scale(1); }
+      40% { transform: translateY(-24px) scale(1.12);}
+      55% { transform: translateY(-10px) scale(1.04);}
+      75% { transform: translateY(4px) scale(0.98);}
+    }
+    .loader-text {
+      color: #fff;
+      font-size: 1.22em;
+      font-family: var(--font-head);
+      letter-spacing:1.2px;
+      font-weight: 700;
+      text-shadow: 0 4px 14px #1de9b670;
+      animation: fadeIn 2.5s;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader (Mascot) -->
+  <div id="loader-bg">
+    <!-- Inline SVG mascot (You can replace with your mascot as SVG or image!) -->
+    <svg class="mascot-loader" viewBox="0 0 120 120" fill="none">
+      <circle cx="60" cy="60" r="54" fill="#fff" opacity="0.16"/>
+      <ellipse cx="60" cy="60" rx="46" ry="46" fill="url(#a)"/>
+      <ellipse cx="60" cy="60" rx="34" ry="34" fill="#fff" opacity="0.15"/>
+      <g>
+        <ellipse cx="60" cy="67" rx="22" ry="18" fill="#1de9b6"/>
+        <ellipse cx="60" cy="70" rx="12" ry="6" fill="#fff" opacity="0.5"/>
+      </g>
+      <g>
+        <ellipse cx="47" cy="55" rx="5" ry="7" fill="#fff"/>
+        <ellipse cx="73" cy="55" rx="5" ry="7" fill="#fff"/>
+        <ellipse cx="47" cy="56" rx="2.5" ry="2.2" fill="#1de9b6"/>
+        <ellipse cx="73" cy="56" rx="2.5" ry="2.2" fill="#1de9b6"/>
+      </g>
+      <path d="M50 75 Q60 85 70 75" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="a" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#1de9b6"/>
+          <stop offset="1" stop-color="#283e51"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="loader-text">Loading World Clock Pro...</div>
+  </div>
+  <header>
+    <span class="app-logo">
+      <!-- Mascot logo, smaller in header -->
+      <svg width="54" height="54" viewBox="0 0 120 120" fill="none">
+        <ellipse cx="60" cy="60" rx="46" ry="46" fill="url(#a)"/>
+        <g>
+          <ellipse cx="47" cy="55" rx="5" ry="7" fill="#fff"/>
+          <ellipse cx="73" cy="55" rx="5" ry="7" fill="#fff"/>
+          <ellipse cx="47" cy="56" rx="2.5" ry="2.2" fill="#1de9b6"/>
+          <ellipse cx="73" cy="56" rx="2.5" ry="2.2" fill="#1de9b6"/>
+        </g>
+        <defs>
+        <linearGradient id="a" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#1de9b6"/>
+          <stop offset="1" stop-color="#283e51"/>
+        </linearGradient>
+        </defs>
+      </svg>
+    </span>
+    <h1>World Clock Pro</h1>
+    <div class="subtitle">Global timekeeping for professionals — Powered by Llydra Abong</div>
+  </header>
+  <div class="container">
+    <div class="top-bar">
+      <div class="login-bar" id="login-bar">
+        <input type="text" placeholder="Username" id="username" />
+        <input type="password" placeholder="Password" id="password" />
+        <button onclick="login()">Login</button>
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search a city..." id="search" onkeyup="filterClocks()" />
+      </div>
+    </div>
+    <div class="clock-grid" id="clock-container">
+      <!-- Dynamically generated clock cards -->
+    </div>
+  </div>
+  <div class="video-container">
+    <h2>Explore Our Featured Videos</h2>
+    <div class="video-list">
+      <video controls poster="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80">
+        <source src="example-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <video controls poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80">
+        <source src="example-video2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <video controls poster="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80">
+        <source src="example-video3.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+  <div class="ad-section">
+    <h2>Sponsored</h2>
+    <p>Check out the latest timepieces at <a href="https://examplewatchstore.com" target="_blank">Example Watch Store</a>!</p>
+  </div>
+  <script>
+    // --- Loader/Mascot logic ---
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(()=> {
+        document.getElementById('loader-bg').classList.add('hide');
+      }, 1400); // fake loading time
+    });
+
+    // --- Sample 100+ cities array (expandable to 1500+) ---
+    // For real-world: Replace with a fetch to 'cities.json' or a larger array!
+    const cities = [
+      {city:"UTC", tz:"UTC"},
+      {city:"New York", tz:"America/New_York"},
+      {city:"London", tz:"Europe/London"},
+      {city:"Tokyo", tz:"Asia/Tokyo"},
+      {city:"Sydney", tz:"Australia/Sydney"},
+      {city:"Dubai", tz:"Asia/Dubai"},
+      {city:"Nairobi", tz:"Africa/Nairobi"},
+      {city:"Paris", tz:"Europe/Paris"},
+      {city:"Los Angeles", tz:"America/Los_Angeles"},
+      {city:"Moscow", tz:"Europe/Moscow"},
+      {city:"Hong Kong", tz:"Asia/Hong_Kong"},
+      {city:"Rio de Janeiro", tz:"America/Sao_Paulo"},
+      {city:"Cape Town", tz:"Africa/Johannesburg"},
+      {city:"Toronto", tz:"America/Toronto"},
+      {city:"Beijing", tz:"Asia/Shanghai"},
+      {city:"Mumbai", tz:"Asia/Kolkata"},
+      {city:"Singapore", tz:"Asia/Singapore"},
+      {city:"Berlin", tz:"Europe/Berlin"},
+      {city:"Rome", tz:"Europe/Rome"},
+      {city:"Madrid", tz:"Europe/Madrid"},
+      {city:"Cairo", tz:"Africa/Cairo"},
+      {city:"Mexico City", tz:"America/Mexico_City"},
+      {city:"Seoul", tz:"Asia/Seoul"},
+      {city:"Bangkok", tz:"Asia/Bangkok"},
+      {city:"Istanbul", tz:"Europe/Istanbul"},
+      {city:"Chicago", tz:"America/Chicago"},
+      {city:"San Francisco", tz:"America/Los_Angeles"},
+      {city:"Buenos Aires", tz:"America/Argentina/Buenos_Aires"},
+      {city:"Santiago", tz:"America/Santiago"},
+      {city:"Lagos", tz:"Africa/Lagos"},
+      {city:"Jakarta", tz:"Asia/Jakarta"},
+      {city:"Lisbon", tz:"Europe/Lisbon"},
+      {city:"Stockholm", tz:"Europe/Stockholm"},
+      {city:"Vienna", tz:"Europe/Vienna"},
+      {city:"Zurich", tz:"Europe/Zurich"},
+      {city:"Oslo", tz:"Europe/Oslo"},
+      {city:"Helsinki", tz:"Europe/Helsinki"},
+      {city:"Budapest", tz:"Europe/Budapest"},
+      {city:"Kuala Lumpur", tz:"Asia/Kuala_Lumpur"},
+      {city:"Manila", tz:"Asia/Manila"},
+      {city:"Auckland", tz:"Pacific/Auckland"},
+      {city:"Wellington", tz:"Pacific/Auckland"},
+      {city:"Perth", tz:"Australia/Perth"},
+      {city:"Melbourne", tz:"Australia/Melbourne"},
+      {city:"Brisbane", tz:"Australia/Brisbane"},
+      {city:"Doha", tz:"Asia/Qatar"},
+      {city:"Abu Dhabi", tz:"Asia/Dubai"},
+      {city:"Amman", tz:"Asia/Amman"},
+      {city:"Jerusalem", tz:"Asia/Jerusalem"},
+      {city:"Tehran", tz:"Asia/Tehran"},
+      {city:"Baghdad", tz:"Asia/Baghdad"},
+      {city:"Karachi", tz:"Asia/Karachi"},
+      {city:"Lima", tz:"America/Lima"},
+      {city:"Bogota", tz:"America/Bogota"},
+      {city:"Vancouver", tz:"America/Vancouver"},
+      {city:"Montreal", tz:"America/Montreal"},
+      {city:"Brussels", tz:"Europe/Brussels"},
+      {city:"Luxembourg", tz:"Europe/Luxembourg"},
+      {city:"Warsaw", tz:"Europe/Warsaw"},
+      {city:"Prague", tz:"Europe/Prague"},
+      {city:"Athens", tz:"Europe/Athens"},
+      {city:"Copenhagen", tz:"Europe/Copenhagen"},
+      {city:"Tallinn", tz:"Europe/Tallinn"},
+      {city:"Riga", tz:"Europe/Riga"},
+      {city:"Vilnius", tz:"Europe/Vilnius"},
+      {city:"Dublin", tz:"Europe/Dublin"},
+      {city:"Edinburgh", tz:"Europe/London"},
+      {city:"Bucharest", tz:"Europe/Bucharest"},
+      {city:"Sofia", tz:"Europe/Sofia"},
+      {city:"Belgrade", tz:"Europe/Belgrade"},
+      {city:"Sarajevo", tz:"Europe/Sarajevo"},
+      {city:"Skopje", tz:"Europe/Skopje"},
+      {city:"Tirana", tz:"Europe/Tirane"},
+      {city:"Podgorica", tz:"Europe/Podgorica"},
+      {city:"Ljubljana", tz:"Europe/Ljubljana"},
+      {city:"Zagreb", tz:"Europe/Zagreb"},
+      {city:"Reykjavik", tz:"Atlantic/Reykjavik"},
+      {city:"Anchorage", tz:"America/Anchorage"},
+      {city:"Honolulu", tz:"Pacific/Honolulu"},
+      {city:"Kingston", tz:"America/Jamaica"},
+      {city:"Port-au-Prince", tz:"America/Port-au-Prince"},
+      {city:"Casablanca", tz:"Africa/Casablanca"},
+      {city:"Dakar", tz:"Africa/Dakar"},
+      {city:"Accra", tz:"Africa/Accra"},
+      {city:"Addis Ababa", tz:"Africa/Addis_Ababa"},
+      {city:"Kampala", tz:"Africa/Kampala"},
+      {city:"Harare", tz:"Africa/Harare"},
+      {city:"Pretoria", tz:"Africa/Johannesburg"},
+      {city:"Algiers", tz:"Africa/Algiers"},
+      {city:"Rabat", tz:"Africa/Casablanca"},
+      {city:"Johannesburg", tz:"Africa/Johannesburg"},
+      {city:"Gaborone", tz:"Africa/Gaborone"},
+      {city:"Windhoek", tz:"Africa/Windhoek"},
+      {city:"Yaounde", tz:"Africa/Douala"},
+      {city:"Khartoum", tz:"Africa/Khartoum"},
+      {city:"Maputo", tz:"Africa/Maputo"},
+      {city:"Luanda", tz:"Africa/Luanda"},
+      {city:"Kinshasa", tz:"Africa/Kinshasa"},
+      {city:"Antananarivo", tz:"Indian/Antananarivo"},
+      {city:"Port Louis", tz:"Indian/Mauritius"}
+      // ... (Add more for 1500+ support)
+    ];
+
+    // --- Core Functions ---
+    function renderClocks(filteredCities = cities) {
+      const container = document.getElementById('clock-container');
+      container.innerHTML = '';
+      filteredCities.forEach((entry, idx) => {
+        const cityShort = entry.tz.split('/')[1] || entry.tz;
+        const card = document.createElement('div');
+        card.className = 'clock-card';
+        card.setAttribute('data-city', entry.city.toLowerCase());
+        card.setAttribute('title', `${entry.city} [${entry.tz}]`);
+        card.innerHTML = `
+          <div class="city-title">${entry.city}</div>
+          <div class="tz-label">${cityShort.replace(/_/g,' ')} (${entry.tz})</div>
+          <div class="clock" id="clock-${idx}">--:--:--</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function updateClock() {
+      const now = new Date();
+      cities.forEach((entry, idx) => {
+        let timeStr;
+        try {
+          if (entry.tz === "UTC") {
+            timeStr = now.toUTCString().split(' ')[4];
+          } else {
+            const time = new Date(now.toLocaleString('en-US', { timeZone: entry.tz }));
+            timeStr = time.toTimeString().split(' ')[0];
+          }
+        } catch {
+          timeStr = "N/A";
+        }
+        const clockElem = document.getElementById(`clock-${idx}`);
+        if (clockElem) clockElem.innerText = timeStr;
+      });
+    }
+    setInterval(updateClock, 1000);
+
+    function filterClocks() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const filtered = cities.filter(entry => entry.city.toLowerCase().includes(query));
+      renderClocks(filtered);
+      updateClock();
+    }
+
+    function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      if (username && password) {
+        localStorage.setItem("loggedInUser", username);
+        alert(`Welcome, ${username}!`);
+        displayWelcome();
+      } else {
+        alert("Please enter both username and password.");
+      }
+    }
+    function displayWelcome() {
+      const user = localStorage.getItem("loggedInUser");
+      if (user) {
+        document.getElementById('login-bar').innerHTML = `
+          <span style="color:var(--accent);font-weight:bold;font-family:var(--font-head);font-size:1.13em;">
+            <svg width="23" height="23" viewBox="0 0 120 120" style="vertical-align:-5px;margin-right:4px;">
+              <ellipse cx="60" cy="60" rx="25" ry="25" fill="url(#a)"/>
+              <ellipse cx="60" cy="60" rx="15" ry="15" fill="#fff" opacity="0.08"/>
+              <defs>
+                <linearGradient id="a" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#1de9b6"/>
+                  <stop offset="1" stop-color="#283e51"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            Welcome, ${user}!
+          </span>`;
+      }
+    }
+
+    // --- Initial Load ---
+    window.addEventListener('DOMContentLoaded', () => {
+      displayWelcome();
+      renderClocks();
+      updateClock();
+    });
+  </script>
+</body>
+</html>
