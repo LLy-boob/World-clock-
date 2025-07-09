@@ -282,6 +282,137 @@
         <ellipse cx="60" cy="70" rx="12" ry="6" fill="#fff" opacity="0.5"/>
       </g>
       <g>
+        <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>World Clock Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg: linear-gradient(135deg, #283e51 0%, #485563 100%);
+      --card-bg: rgba(255,255,255,0.13);
+      --card-bg-hover: rgba(255,255,255,0.21);
+      --accent: #1de9b6;
+      --accent2: #ffb347;
+      --shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+      --font-head: 'Orbitron', 'Montserrat', Arial, sans-serif;
+      --font-base: 'Montserrat', Arial, sans-serif;
+      --logo-size: 60px;
+      --transition: 0.22s cubic-bezier(.4,2,.5,1);
+    }
+
+    body {
+      margin: 0;
+      background: var(--main-bg);
+      color: #f3f8fa;
+      font-family: var(--font-base);
+      transition: background 0.6s, color 0.4s;
+    }
+
+    header {
+      text-align: center;
+      padding: 2em 1em 1em;
+      border-bottom: 2px solid var(--accent);
+      background: rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .app-logo {
+      width: var(--logo-size);
+      height: var(--logo-size);
+      margin-bottom: 0.4em;
+      filter: drop-shadow(0 2px 8px #1de9b699);
+    }
+
+    h1 {
+      font-family: var(--font-head);
+      font-size: 2.4em;
+      color: var(--accent);
+      margin: 0.2em 0;
+    }
+
+    .subtitle {
+      font-size: 1em;
+      color: #d0f6f3;
+      margin-bottom: 0.5em;
+    }
+
+    .theme-toggle, .format-toggle {
+      margin-top: 0.5em;
+      font-size: 0.9em;
+      padding: 0.5em 1em;
+      border-radius: 6px;
+      border: 1px solid var(--accent);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--accent2);
+      cursor: pointer;
+      font-family: var(--font-head);
+      transition: background 0.3s ease;
+    }
+
+    .theme-toggle:hover,
+    .format-toggle:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    body.light-mode {
+      background: #f2f2f2;
+      color: #222;
+    }
+
+    body.light-mode header {
+      background: #fff;
+      border-bottom-color: var(--accent2);
+    }
+
+    body.light-mode .theme-toggle,
+    body.light-mode .format-toggle {
+      color: #111;
+      border-color: #111;
+    }
+
+    body.light-mode h1,
+    body.light-mode .subtitle {
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="app-logo">
+      <!-- You can keep your original inline mascot SVG here -->
+      <svg width="54" height="54" viewBox="0 0 120 120" fill="none">
+        <ellipse cx="60" cy="60" rx="46" ry="46" fill="url(#a)"/>
+        <g>
+          <ellipse cx="47" cy="55" rx="5" ry="7" fill="#fff"/>
+          <ellipse cx="73" cy="55" rx="5" ry="7" fill="#fff"/>
+          <ellipse cx="47" cy="56" rx="2.5" ry="2.2" fill="#1de9b6"/>
+          <ellipse cx="73" cy="56" rx="2.5" ry="2.2" fill="#1de9b6"/>
+        </g>
+        <defs>
+        <linearGradient id="a" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#1de9b6"/>
+          <stop offset="1" stop-color="#283e51"/>
+        </linearGradient>
+        </defs>
+      </svg>
+    </span>
+    <h1>World Clock Pro</h1>
+    <div class="subtitle">Global timekeeping for professionals — Powered by Llydra Abong</div>
+    
+    <!-- ☀️ Theme toggle button -->
+    <button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙 Mode</button>
+
+    <!-- 🕘 Time format toggle (12h/24h) placeholder -->
+    <button class="format-toggle" onclick="alert('Coming soon')">🕘 12/24h Format</button>
+  </header>
         <ellipse cx="47" cy="55" rx="5" ry="7" fill="#fff"/>
         <ellipse cx="73" cy="55" rx="5" ry="7" fill="#fff"/>
         <ellipse cx="47" cy="56" rx="2.5" ry="2.2" fill="#1de9b6"/>
